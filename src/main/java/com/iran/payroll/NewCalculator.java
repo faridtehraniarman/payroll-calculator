@@ -93,6 +93,52 @@ public class NewCalculator {
         scanner.close();
     }
 
+    public static PayslipModel calculate( long baseSalary,double overtimeHours, long expertiseBonus,
+                                  long attractionBonus, long marriageAllowance) {
+
+
+        // --- محاسبات ---
+
+        // 1. محاسبه دستمزد ساعتی اضافه‌کاری
+        double hourlyRate = (baseSalary + expertiseBonus +  attractionBonus) / WORK_HOURS_PER_MONTH;
+        long overtimePay = (long) (hourlyRate * OVERTIME_MULTIPLIER * overtimeHours);
+
+        // 2. محاسبه کل دریافتی‌ها (حقوق ناخالص)
+        long totalEarnings = baseSalary + HOUSING_ALLOWANCE + WORKERS_BENEFIT +
+                expertiseBonus + attractionBonus + marriageAllowance + overtimePay;
+
+        // 3. محاسبه کسورات
+
+        // الف) محاسبه حق بیمه سهم کارمند (7٪ از حقوق و مزایای مشمول بیمه)
+        // فرض بر این است که کلیه اقلام فوق مشمول بیمه هستند.[7, 8]
+        long insuredWage = baseSalary + HOUSING_ALLOWANCE + WORKERS_BENEFIT +
+                expertiseBonus + attractionBonus + marriageAllowance + overtimePay;
+
+        // در این مثال، سقف بیمه لحاظ نشده است. در محاسبات واقعی باید سقف بیمه ماهانه (ماده 35 قانون تأمین اجتماعی) کنترل شود.[9]
+        long ssoDeduction = (long) (insuredWage * SSO_EMPLOYEE_RATE);
+
+        long extraInsurance = 24499890L;
+        // ب) محاسبه مالیات بر درآمد حقوق (پلکانی)
+        long taxableIncome = insuredWage; // کلیه اقلام حقوقی مشمول مالیات هستند.[10]
+        long taxDeduction = calculateProgressiveTax(taxableIncome - ssoDeduction - extraInsurance);
+
+        // 4. محاسبه حقوق خالص (خالص پرداختی)
+        long totalDeductions = ssoDeduction + taxDeduction + extraInsurance;
+        long netSalary = totalEarnings - totalDeductions;
+
+        // --- نمایش فیش حقوقی ---
+//        displayPayslip(baseSalary, HOUSING_ALLOWANCE, WORKERS_BENEFIT, expertiseBonus,
+//                attractionBonus, marriageAllowance, overtimePay,
+//                totalEarnings, ssoDeduction, taxDeduction, netSalary,
+//                overtimeHours, overtimePay, extraInsurance);
+
+        return new PayslipModel(baseSalary, HOUSING_ALLOWANCE, WORKERS_BENEFIT, expertiseBonus,
+                attractionBonus, marriageAllowance, overtimePay,
+                totalEarnings, ssoDeduction, taxDeduction, netSalary,
+                overtimeHours, overtimePay, extraInsurance);
+
+    }
+
 
     private static long calculateProgressiveTax(long incomeForTax) {
         if (incomeForTax <= TAX_EXEMPTION_MONTHLY) {
