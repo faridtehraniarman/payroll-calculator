@@ -1,22 +1,194 @@
 /* frontend/styles/payroll-form-view.css */
 
+/* Import Vazirmatn font */
+@import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;700;900&display=swap');
+
+/* Apply font and dark background to the entire page */
 body {
-    /*
-      Place your background image in `src/main/resources/META-INF/resources/images/background.jpg`
-      The URL is relative to the 'resources' folder.
-    */
-    background-image: url('images/background.jpg');
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
+    font-family: 'Vazirmatn', sans-serif;
+    background-color: #0f172a; /* bg-slate-900 */
+    color: #cbd5e1; /* text-slate-300 */
+    overflow: hidden; /* Prevents scrollbars from background elements */
 }
 
-.form-container {
-    background-color: rgba(255, 255, 255, 0.95); /* Semi-transparent white */
-    border-radius: 16px;
-    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
-    backdrop-filter: blur(4px);
-    -webkit-backdrop-filter: blur(4px);
-    border: 1px solid rgba(255, 255, 255, 0.18);
-    padding: 2rem !important; /* Use !important to override component's inline styles */
+/* Aurora background effects */
+.aurora-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    overflow: hidden;
+    pointer-events: none;
+    z-index: -1;
+}
+
+.aurora-shape1 {
+    position: absolute;
+    top: -20%;
+    right: -10%;
+    width: 50vw;
+    height: 50vw;
+    background-color: rgba(79, 70, 229, 0.2); /* bg-indigo-600/20 */
+    border-radius: 50%;
+    filter: blur(100px);
+    animation: pulse 8s infinite alternate;
+}
+
+.aurora-shape2 {
+    position: absolute;
+    top: 40%;
+    left: -10%;
+    width: 40vw;
+    height: 40vw;
+    background-color: rgba(59, 130, 246, 0.1); /* bg-blue-500/10 */
+    border-radius: 50%;
+    filter: blur(100px);
+}
+
+.aurora-shape3 {
+    position: absolute;
+    bottom: -10%;
+    right: 20%;
+    width: 30vw;
+    height: 30vw;
+    background-color: rgba(16, 185, 129, 0.1); /* bg-emerald-500/10 */
+    border-radius: 50%;
+    filter: blur(100px);
+}
+
+@keyframes pulse {
+    from {
+        transform: scale(1);
+        opacity: 0.7;
+    }
+    to {
+        transform: scale(1.2);
+        opacity: 1;
+    }
+}
+
+/* Main layout grid */
+.main-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    width: 100%;
+    max-width: 1152px; /* max-w-6xl */
+    padding: 2rem 1rem;
+}
+
+@media (min-width: 1024px) {
+    .main-grid {
+        grid-template-columns: repeat(12, 1fr);
+        align-items: center;
+        height: 100vh;
+    }
+
+    .form-column {
+        grid-column: span 7 / span 7;
+    }
+
+    .receipt-column {
+        grid-column: span 5 / span 5;
+    }
+}
+
+/* Form container styles */
+.form-card {
+    background-color: rgba(15, 23, 42, 0.6); /* bg-slate-900/60 */
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(51, 65, 85, 0.5); /* border-slate-700/50 */
+    border-radius: 1rem;
+    padding: 2rem;
+    box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+}
+
+/* Style for input fields */
+.form-card vaadin-text-field,
+.form-card vaadin-number-field {
+    --lumo-contrast-10pct: rgba(51, 65, 85, 1); /* border-slate-700 */
+    --lumo-base-color: rgba(15, 23, 42, 0.8); /* bg-slate-900/80 */
+}
+
+.form-card [part="input-field"] {
+    background-color: var(--lumo-base-color);
+    border-radius: 0.75rem;
+}
+
+.form-card [part="label"] {
+    color: #cbd5e1; /* text-slate-300 */
+    font-weight: 500;
+}
+
+/* Receipt container styles */
+.receipt-card {
+    background-color: white;
+    color: #334155; /* text-slate-700 */
+    border-radius: 0.75rem;
+    box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.25);
+    overflow: hidden;
+    transition: transform 0.5s;
+}
+
+.receipt-card:hover {
+    transform: scale(1.02);
+}
+
+.receipt-header {
+    background-color: #f1f5f9; /* bg-slate-100 */
+    padding: 1.5rem;
+    border-bottom: 1px dashed #cbd5e1; /* border-slate-300 */
+}
+
+.receipt-body {
+    padding: 1.5rem;
+}
+
+.receipt-footer {
+    background-color: #f8fafc; /* bg-slate-50 */
+    padding: 1rem;
+    border-top: 1px solid #e2e8f0; /* border-slate-200 */
+}
+
+.receipt-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.875rem; /* text-sm */
+    margin-bottom: 0.75rem;
+}
+
+.receipt-label {
+    color: #64748b; /* text-slate-500 */
+}
+
+.receipt-value {
+    font-weight: 600;
+}
+
+.receipt-value.income {
+    color: #16a34a; /* text-emerald-600 */
+}
+
+.receipt-value.deduction {
+    color: #ef4444; /* text-red-500 */
+}
+
+.net-pay-section {
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 2px solid #1e293b; /* border-slate-800 */
+}
+
+.form-card vaadin-text-field,
+.form-card vaadin-number-field {
+    --lumo-secondary-text-color: #94a3b8; /* text-slate-400 */
+    --lumo-text-field-value-color: #ffffff; /* text-slate-300 */
+}
+
+.form-card vaadin-text-field[focused] [part="input-field"],
+.form-card vaadin-number-field[focused] [part="input-field"],
+.form-card vaadin-text-field:hover [part="input-field"],
+.form-card vaadin-number-field:hover [part="input-field"] {
+    background-color: rgba(30, 41, 59, 0.9); /* bg-slate-800/90 */
 }
